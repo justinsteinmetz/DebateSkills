@@ -4,24 +4,30 @@
 <head>
 <meta charset="UTF-8">
 <title>Debate Driver</title>
-<style>
-    body {
-        margin: 0;
-        background: #000;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        overflow: hidden;
-    }
 
-```
+<style>
+body {
+    margin: 0;
+    background: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* STAGES */
 .stage {
     display: none;
-    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100vw;
+    height: 100vh;
+
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    flex-direction: column;
+
     padding: 40px;
 }
 
@@ -29,6 +35,7 @@
     display: flex;
 }
 
+/* TYPOGRAPHY */
 h1 {
     font-size: 4em;
     margin-bottom: 20px;
@@ -42,14 +49,13 @@ h1 {
 
 .sub {
     font-size: 1.8em;
-    margin-top: 30px;
+    margin-top: 25px;
     color: #ccc;
 }
 
 .timer {
     font-size: 6em;
     margin-top: 40px;
-    letter-spacing: 3px;
     color: #aaa;
 }
 
@@ -60,11 +66,13 @@ h1 {
     font-size: 0.9em;
     color: #555;
 }
-```
-
 </style>
+
 </head>
+
 <body>
+
+<!-- STAGE 1 -->
 
 <div class="stage active">
     <h1>Take a Side</h1>
@@ -74,8 +82,10 @@ h1 {
     <div class="sub">
         LEFT = YES &nbsp;&nbsp;&nbsp; RIGHT = NO
     </div>
-    <div class="hint">Cold call immediately. Demand examples.</div>
+    <div class="hint">Cold call. Demand examples.</div>
 </div>
+
+<!-- STAGE 2 -->
 
 <div class="stage">
     <h1>Structure</h1>
@@ -85,56 +95,53 @@ h1 {
     <div class="sub">
         No rebuttal = no debate
     </div>
-    <div class="hint">Reject vague answers fast.</div>
+    <div class="hint">Reject vague answers.</div>
 </div>
+
+<!-- STAGE 3 -->
 
 <div class="stage" data-time="240">
     <h1>Round 1</h1>
-    <div class="main">
-        PREP → DEBATE → POI
-    </div>
-    <div class="sub">
-        1 min → 2 min → 1 min
-    </div>
+    <div class="main">PREP → DEBATE → POI</div>
+    <div class="sub">1 min → 2 min → 1 min</div>
     <div class="timer">4:00</div>
-    <div class="hint">Enforce POIs strictly.</div>
+    <div class="hint">Enforce POIs.</div>
 </div>
+
+<!-- STAGE 4 -->
 
 <div class="stage" data-time="240">
     <h1>Switch Sides</h1>
-    <div class="main">
-        Argue the opposite
-    </div>
+    <div class="main">Argue the opposite</div>
     <div class="timer">4:00</div>
-    <div class="hint">Push for deeper reasoning.</div>
+    <div class="hint">Push deeper thinking.</div>
 </div>
+
+<!-- STAGE 5 -->
 
 <div class="stage" data-time="180">
     <h1>Twist</h1>
-    <div class="main">
-        Monitoring is done by AI
-    </div>
+    <div class="main">Monitoring is done by AI</div>
     <div class="timer">3:00</div>
-    <div class="hint">Highlight argument shifts.</div>
+    <div class="hint">Watch argument shifts.</div>
 </div>
+
+<!-- STAGE 6 -->
 
 <div class="stage" data-time="120">
     <h1>Final Duel</h1>
-    <div class="main">
-        30 seconds each
-    </div>
-    <div class="sub">
-        Respond directly
-    </div>
+    <div class="main">30 seconds each</div>
+    <div class="sub">Respond directly</div>
     <div class="timer">2:00</div>
     <div class="hint">Who actually rebutted?</div>
 </div>
 
+<!-- STAGE 7 -->
+
 <div class="stage">
     <h1>Exit</h1>
     <div class="main">
-        What matters more?
-        <br><br>
+        What matters more?<br><br>
         Safety or privacy
     </div>
 </div>
@@ -152,7 +159,10 @@ function showStage(index) {
     clearInterval(timerInterval);
 
     const time = stages[index].dataset.time;
-    if (time) startTimer(time, stages[index].querySelector('.timer'));
+    if (time) {
+        const display = stages[index].querySelector('.timer');
+        startTimer(parseInt(time), display);
+    }
 }
 
 function startTimer(seconds, display) {
@@ -162,7 +172,7 @@ function startTimer(seconds, display) {
         const min = Math.floor(remaining / 60);
         const sec = remaining % 60;
         display.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
-        if (remaining-- < 0) clearInterval(timerInterval);
+        if (remaining-- <= 0) clearInterval(timerInterval);
     }
 
     update();
@@ -178,13 +188,15 @@ function nextStage() {
         showStage(current);
     }
 
-    setTimeout(() => locked = false, 300);
+    setTimeout(() => locked = false, 250);
 }
 
 document.addEventListener('click', nextStage);
 document.addEventListener('keydown', e => {
     if (e.code === 'Space') nextStage();
 });
+
+showStage(0);
 </script>
 
 </body>
