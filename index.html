@@ -18,10 +18,10 @@
     display: none;
     height: 100vh;
     width: 100vw;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+    flex-direction: column;
     padding: 40px;
 }
 
@@ -31,26 +31,34 @@
 
 h1 {
     font-size: 4em;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
-.big {
-    font-size: 2.5em;
+.main {
+    font-size: 2.6em;
     max-width: 1000px;
+    line-height: 1.3;
+}
+
+.sub {
+    font-size: 1.8em;
+    margin-top: 30px;
+    color: #ccc;
 }
 
 .timer {
-    font-size: 5em;
+    font-size: 6em;
     margin-top: 40px;
+    letter-spacing: 3px;
     color: #aaa;
 }
 
 .hint {
     position: absolute;
-    bottom: 10px;
+    bottom: 15px;
     left: 20px;
     font-size: 0.9em;
-    color: #666;
+    color: #555;
 }
 ```
 
@@ -60,59 +68,62 @@ h1 {
 
 <div class="stage active">
     <h1>Take a Side</h1>
-    <div class="big">
-        Schools should be allowed to monitor students’ private social media to prevent harm.
+    <div class="main">
+        Schools should be allowed to monitor students’ private social media to prevent harm
     </div>
-    <div class="big" style="margin-top:40px;">
+    <div class="sub">
         LEFT = YES &nbsp;&nbsp;&nbsp; RIGHT = NO
     </div>
-    <div class="hint">Cold call. Force examples.</div>
+    <div class="hint">Cold call immediately. Demand examples.</div>
 </div>
 
 <div class="stage">
     <h1>Structure</h1>
-    <div class="big">
+    <div class="main">
         Claim → Because → Example → However
     </div>
-    <div class="big" style="margin-top:30px;">
+    <div class="sub">
         No rebuttal = no debate
     </div>
-    <div class="hint">Reject vague answers.</div>
+    <div class="hint">Reject vague answers fast.</div>
 </div>
 
 <div class="stage" data-time="240">
     <h1>Round 1</h1>
-    <div class="big">
-        PREP — 1:00<br>
-        DEBATE — 2:00<br>
-        POI — 1:00
+    <div class="main">
+        PREP → DEBATE → POI
+    </div>
+    <div class="sub">
+        1 min → 2 min → 1 min
     </div>
     <div class="timer">4:00</div>
-    <div class="hint">Enforce POIs.</div>
+    <div class="hint">Enforce POIs strictly.</div>
 </div>
 
 <div class="stage" data-time="240">
     <h1>Switch Sides</h1>
-    <div class="big">
+    <div class="main">
         Argue the opposite
     </div>
     <div class="timer">4:00</div>
-    <div class="hint">Push deeper thinking.</div>
+    <div class="hint">Push for deeper reasoning.</div>
 </div>
 
 <div class="stage" data-time="180">
     <h1>Twist</h1>
-    <div class="big">
+    <div class="main">
         Monitoring is done by AI
     </div>
     <div class="timer">3:00</div>
-    <div class="hint">Watch argument shifts.</div>
+    <div class="hint">Highlight argument shifts.</div>
 </div>
 
 <div class="stage" data-time="120">
     <h1>Final Duel</h1>
-    <div class="big">
-        30 seconds each<br>
+    <div class="main">
+        30 seconds each
+    </div>
+    <div class="sub">
         Respond directly
     </div>
     <div class="timer">2:00</div>
@@ -120,10 +131,11 @@ h1 {
 </div>
 
 <div class="stage">
-    <h1>Exit Question</h1>
-    <div class="big">
-        What matters more:<br><br>
-        Safety or privacy?
+    <h1>Exit</h1>
+    <div class="main">
+        What matters more?
+        <br><br>
+        Safety or privacy
     </div>
 </div>
 
@@ -131,6 +143,7 @@ h1 {
 let current = 0;
 const stages = document.querySelectorAll('.stage');
 let timerInterval;
+let locked = false;
 
 function showStage(index) {
     stages.forEach(s => s.classList.remove('active'));
@@ -157,17 +170,21 @@ function startTimer(seconds, display) {
 }
 
 function nextStage() {
+    if (locked) return;
+    locked = true;
+
     if (current < stages.length - 1) {
         current++;
         showStage(current);
     }
+
+    setTimeout(() => locked = false, 300);
 }
 
 document.addEventListener('click', nextStage);
 document.addEventListener('keydown', e => {
     if (e.code === 'Space') nextStage();
 });
-
 </script>
 
 </body>
