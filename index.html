@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Debate Lesson – Control Mode FINAL</title>
+<style>
+    body {
+        margin: 0;
+        background: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+    }
+
+```
+.slide {
+    display: none;
+    height: 100vh;
+    width: 100vw;
+    padding: 60px;
+    box-sizing: border-box;
+}
+
+.active {
+    display: block;
+}
+
+h1 {
+    font-size: 4em;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 2em;
+    color: #ccc;
+}
+
+.big {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.trigger {
+    font-size: 2em;
+    color: #ff4d4d;
+}
+
+.rule {
+    color: #ffcc00;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+ul {
+    font-size: 1.8em;
+    line-height: 1.6;
+}
+
+.timer {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 2em;
+    color: #0f0;
+}
+
+.countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10em;
+    font-weight: bold;
+    display: none;
+}
+
+.timeup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 6em;
+    color: #f00;
+    display: none;
+}
+
+.flash {
+    animation: flash 0.3s alternate 6;
+}
+
+@keyframes flash {
+    from { background: #000; }
+    to { background: #400; }
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.locked::after {
+    content: "🔒 LOCKED";
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    color: #888;
+}
+```
+
+</style>
+</head>
+<body>
+
+<div class="timer" id="timer">00:00</div>
+<div class="countdown" id="countdown">60</div>
+<div class="timeup" id="timeup">TIME</div>
+
+<!-- SLIDES -->
+
+<div class="slide active center">
+    <h1>DEBATE: LIVE</h1>
+    <h2>No safe answers. No hiding.</h2>
+</div>
+
+<div class="slide center">
+    <div class="trigger">
+        A student posts something at 2am.<br>
+        By 8am, the school has screenshots.
+    </div>
+</div>
+
+<div class="slide center">
+    <div class="big">
+        “Schools should be allowed to monitor students’ private social media to prevent harm.”
+    </div>
+</div>
+
+<div class="slide center">
+    <h1>PICK A SIDE</h1>
+    <ul>
+        <li>LEFT = YES</li>
+        <li>RIGHT = NO</li>
+    </ul>
+    <div class="rule">NO “IT DEPENDS”</div>
+</div>
+
+<div class="slide center">
+    <h1>HOW TO WIN</h1>
+    <div class="big">CLAIM → BECAUSE → EXAMPLE → HOWEVER</div>
+    <div class="rule">NO REBUTTAL = YOU GET CUT OFF</div>
+</div>
+
+<div class="slide center">
+    <h1>ROUND 1</h1>
+    <ul>
+        <li>1 min prep</li>
+        <li>2 min speaking</li>
+        <li>1 min POIs</li>
+    </ul>
+    <div class="rule">A ATTACKS / B DEFENDS</div>
+</div>
+
+<div class="slide center">
+    <h1>ROUND 2</h1>
+    <div class="big">SWITCH SIDES</div>
+</div>
+
+<div class="slide center">
+    <h1>TWIST</h1>
+    <div class="big">NO TEACHERS</div>
+    <div class="big">ONLY AI WATCHING</div>
+    <div class="rule">BETTER OR MORE DANGEROUS?</div>
+</div>
+
+<div class="slide center">
+    <h1>FINAL DUEL</h1>
+    <ul>
+        <li>2 students</li>
+        <li>30 seconds each</li>
+    </ul>
+    <div class="rule">USE YOUR OPPONENT’S LAST SENTENCE</div>
+</div>
+
+<div class="slide center">
+    <h1>FINAL QUESTION</h1>
+    <div class="big">
+        Would you accept being watched<br>
+        if it meant no one could be bullied?
+    </div>
+</div>
+
+<script>
+let slides = document.querySelectorAll('.slide');
+let current = 0;
+let locked = false;
+
+function nextSlide() {
+    if (locked) return;
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+}
+
+function prevSlide() {
+    if (locked) return;
+    slides[current].classList.remove('active');
+    current = (current - 1 + slides.length) % slides.length;
+    slides[current].classList.add('active');
+}
+
+document.body.addEventListener('click', nextSlide);
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === "ArrowRight") nextSlide();
+    if (e.key === "ArrowLeft") prevSlide();
+
+    if (e.key.toLowerCase() === "l") {
+        locked = !locked;
+        document.body.classList.toggle("locked");
+    }
+
+    if (e.key.toLowerCase() === "t") resetTimer();
+
+    if (e.key === " ") toggleTimer();
+
+    if (e.key === "1") startCountdown(60);
+    if (e.key === "2") startCountdown(120);
+    if (e.key === "3") startCountdown(180);
+    if (e.key === "6") startCountdown(360);
+});
+
+// TIMER
+let seconds = 0;
+let running = true;
+
+function toggleTimer() {
+    running = !running;
+}
+
+function resetTimer() {
+    seconds = 0;
+}
+
+setInterval(() => {
+    if (running) {
+        seconds++;
+        let mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+        let secs = String(seconds % 60).padStart(2, '0');
+        document.getElementById('timer
